@@ -7,7 +7,7 @@ buildscript {
 
 allprojects {
     group = "com.rickclephas.kmp"
-    version = "0.1.17"
+    version = "0.1.17-beatgrid"
 
     repositories {
         mavenCentral()

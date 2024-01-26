@@ -7,6 +7,7 @@ import platform.Foundation.NSException
 import platform.Foundation.NSNumber
 import platform.darwin.NSUInteger
 import kotlin.reflect.KClass
+import kotlin.test.fail
 
 /**
  * Returns a [NSException] representing `this` [Throwable].
@@ -44,11 +45,12 @@ internal fun Throwable.getReason(appendCausedBy: Boolean = false): String? {
     if (!appendCausedBy) return message
     return buildString {
         message?.let(::append)
-        for (cause in causes) {
-            if (isNotEmpty()) appendLine()
+        cause?.let {
+            if (this.isNotEmpty()) {
+                append("\n")
+            }
             append("Caused by: ")
-            append(cause.name)
-            cause.message?.let { append(": $it") }
+            append(it.stackTraceToString())
         }
     }.takeIf { it.isNotEmpty() }
 }

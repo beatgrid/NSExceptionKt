@@ -19,8 +19,8 @@ if (localPropsFile.exists()) {
     ext["signing.password"] = System.getenv("SIGNING_PASSWORD")
     ext["signing.secretKey"] = System.getenv("SIGNING_SECRET_KEY")
     ext["signing.secretKeyRingFile"] = System.getenv("SIGNING_SECRET_KEY_RING_FILE")
-    ext["ossrhUsername"] = System.getenv("OSSRH_USERNAME")
-    ext["ossrhPassword"] = System.getenv("OSSRH_PASSWORD")
+    ext["artifactoryUsername"] = System.getenv("ARTIFACTORY_BEATGRID_CREDS_USR")
+    ext["artifactoryPassword"] = System.getenv("ARTIFACTORY_BEATGRID_CREDS_PSW")
 }
 
 fun getExtraString(name: String) = ext[name]?.toString()
@@ -30,11 +30,11 @@ val signPublications = getExtraString("signing.keyId") != null
 publishing {
     repositories {
         maven {
-            name = "sonatype"
-            setUrl("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+            name = "artifactory"
+            setUrl("https://artifactory.beatgrid.net/artifactory/libs-release-local")
             credentials {
-                username = getExtraString("ossrhUsername")
-                password = getExtraString("ossrhPassword")
+                username = getExtraString("artifactoryUsername")
+                password = getExtraString("artifactoryPassword")
             }
         }
     }

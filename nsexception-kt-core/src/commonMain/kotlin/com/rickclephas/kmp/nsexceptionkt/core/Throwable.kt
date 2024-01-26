@@ -9,7 +9,7 @@ import kotlin.experimental.ExperimentalNativeApi
  */
 public val Throwable.causes: List<Throwable> get() = buildList {
     val causes = mutableSetOf<Throwable>()
-    var cause = cause
+    var cause = this@causes.cause
     while (cause != null && causes.add(cause)) {
         add(cause)
         cause = cause.cause

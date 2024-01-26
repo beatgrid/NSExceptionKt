@@ -2,6 +2,8 @@ package com.rickclephas.kmp.nsexceptionkt.core
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
+import kotlin.test.fail
 
 class ThrowableReasonTests {
 
@@ -36,31 +38,31 @@ class ThrowableReasonTests {
     fun testReasonWithCause() {
         val cause = Exception("Cause message")
         val exception = Exception("Test message", cause)
-        val reason = exception.getReason(true)
-        assertEquals("""
+        val reason = exception.getReason(true) ?: fail("No reason")
+        assertTrue(reason.startsWith("""
             Test message
             Caused by: kotlin.Exception: Cause message
-        """.trimIndent(), reason)
+        """.trimIndent()))
     }
 
     @Test
     fun testReasonNoMessageWithCause() {
         val cause = Exception("Cause message")
         val exception = Exception(null, cause)
-        val reason = exception.getReason(true)
-        assertEquals("""
+        val reason = exception.getReason(true) ?: fail("No reason")
+        assertTrue(reason.startsWith("""
             Caused by: kotlin.Exception: Cause message
-        """.trimIndent(), reason)
+        """.trimIndent()))
     }
 
     @Test
     fun testReasonNoCauseMessage() {
         val exception = Exception("Test message", Exception())
-        val reason = exception.getReason(true)
-        assertEquals("""
+        val reason = exception.getReason(true) ?: fail("No reason")
+        assertTrue(reason.startsWith("""
             Test message
             Caused by: kotlin.Exception
-        """.trimIndent(), reason)
+        """.trimIndent()))
     }
 
     @Test
@@ -68,11 +70,9 @@ class ThrowableReasonTests {
         val cause1 = Exception("Cause1 message")
         val cause2 = Exception("Cause2 message", cause1)
         val exception = Exception("Test message", cause2)
-        val reason = exception.getReason(true)
-        assertEquals("""
-            Test message
-            Caused by: kotlin.Exception: Cause2 message
-            Caused by: kotlin.Exception: Cause1 message
-        """.trimIndent(), reason)
+        val reason = exception.getReason(true) ?: fail("No reason")
+        assertTrue(reason.contains("Test message"))
+        assertTrue(reason.contains("Caused by: kotlin.Exception: Cause2 message"))
+        assertTrue(reason.contains("Caused by: kotlin.Exception: Cause1 message"))
     }
 }
